@@ -11,8 +11,8 @@ using eCommerce.Api.Data;
 namespace eCommerce.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240313092035_update")]
-    partial class update
+    [Migration("20240315001122_firstMigration")]
+    partial class firstMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,6 +31,10 @@ namespace eCommerce.Api.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -80,12 +84,17 @@ namespace eCommerce.Api.Migrations
             modelBuilder.Entity("eCommerce.Library.Models.Product", b =>
                 {
                     b.HasOne("eCommerce.Library.Models.Category", "Category")
-                        .WithMany()
+                        .WithMany("Products")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("eCommerce.Library.Models.Category", b =>
+                {
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }
